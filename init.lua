@@ -1,14 +1,13 @@
-local rel_dir = ...
-
 -- FFI binding to FFmpeg
-local path_to_include = rel_dir .. "/include/"
+
+local rel_dir = ...
 
 local assert , error = assert , error
 local setmetatable = setmetatable
 local tonumber , tostring = tonumber , tostring
 local tblinsert = table.insert
 
--- Windows binaries from http://ffmpeg.zeranoe.com/builds/
+local jit = require"jit"
 
 local ffi = require"ffi"
 local ffi_util = require"ffi_util"
@@ -16,7 +15,7 @@ local ffi_add_include_dir 	= ffi_util.ffi_add_include_dir
 local ffi_defs 				= ffi_util.ffi_defs
 local ffi_process_defines 	= ffi_util.ffi_process_defines
 
-ffi_add_include_dir ( path_to_include )
+ffi_add_include_dir ( rel_dir .. "/include/" )
 
 ffi_defs ( rel_dir .. "/defs.h" , { --TODO: remove rel_dir
 		[[libavutil/avstring.h]] ;
@@ -25,7 +24,7 @@ ffi_defs ( rel_dir .. "/defs.h" , { --TODO: remove rel_dir
 	} )
 
 local avutil , avcodec , avformat
-if jit.os == "Windows" then
+if jit.os == "Windows" then -- Windows binaries from http://ffmpeg.zeranoe.com/builds/
 	avutil 		= ffi.load ( rel_dir .. [[/avutil-51]] )
 	avcodec 	= ffi.load ( rel_dir .. [[/avcodec-53]] )
 	avformat 	= ffi.load ( rel_dir .. [[/avformat-53]] )
@@ -34,7 +33,7 @@ elseif jit.os == "Linux" or jit.os == "OSX" or jit.os == "POSIX" or jit.os == "B
 	avcodec 	= ffi.load ( [[libavcodec]] )
 	avformat 	= ffi.load ( [[libavformat]] )
 else
-	error("Unknown platform")
+	error ( "Unknown platform" )
 end
 
 local ffmpeg = {
