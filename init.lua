@@ -1,6 +1,5 @@
 -- FFI binding to FFmpeg
 
-
 local assert , error = assert , error
 local setmetatable = setmetatable
 local tonumber , tostring = tonumber , tostring

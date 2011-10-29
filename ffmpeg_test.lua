@@ -1,4 +1,8 @@
-package.path = package.path .. ";./?/init.lua"
+local general 				= require"general"
+local current_script_dir 	= general.current_script_dir
+local rel_dir = assert ( current_script_dir ( ) , "Current directory unknown" )
+
+package.path = package.path .. ";" .. rel_dir .. "../?/init.lua"
 
 -- Based on https://github.com/mkottman/ffi_fun/blob/master/ffmpeg_audio.lua
 
@@ -13,7 +17,7 @@ local avcodec = 	ffmpeg.avcodec
 local avformat =	ffmpeg.avformat
 
 
-local FILENAME = arg[1] or 'song.mp3'
+local FILENAME = assert ( arg[1] , "No input file" )
 local SECTION = print
 
 
