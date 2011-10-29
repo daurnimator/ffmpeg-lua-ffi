@@ -7,8 +7,6 @@ local setmetatable = setmetatable
 local tonumber , tostring = tonumber , tostring
 local tblinsert = table.insert
 
-local jit = require"jit"
-
 local ffi = require"ffi"
 local ffi_util = require"ffi_util"
 local ffi_add_include_dir 	= ffi_util.ffi_add_include_dir
@@ -24,6 +22,7 @@ ffi_defs ( rel_dir .. "/defs.h" , { --TODO: remove rel_dir
 	} )
 
 local avutil , avcodec , avformat
+assert(jit,"jit table unavailable")
 if jit.os == "Windows" then -- Windows binaries from http://ffmpeg.zeranoe.com/builds/
 	avutil 		= ffi.load ( rel_dir .. [[/avutil-51]] )
 	avcodec 	= ffi.load ( rel_dir .. [[/avcodec-53]] )
