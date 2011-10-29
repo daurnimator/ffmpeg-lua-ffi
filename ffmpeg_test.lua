@@ -1,7 +1,8 @@
+-- A test for luajit ffi based ffmpeg bindings
+
 local general 				= require"general"
 local current_script_dir 	= general.current_script_dir
 local rel_dir = assert ( current_script_dir ( ) , "Current directory unknown" )
-
 package.path = package.path .. ";" .. rel_dir .. "../?/init.lua"
 
 -- Based on https://github.com/mkottman/ffi_fun/blob/master/ffmpeg_audio.lua
