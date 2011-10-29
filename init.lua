@@ -1,11 +1,15 @@
 -- FFI binding to FFmpeg
 
-local rel_dir = ...
 
 local assert , error = assert , error
 local setmetatable = setmetatable
 local tonumber , tostring = tonumber , tostring
 local tblinsert = table.insert
+
+local general 				= require"general"
+local current_script_dir 	= general.current_script_dir
+
+local rel_dir = assert ( current_script_dir ( ) , "Current directory unknown" )
 
 local ffi 					= require"ffi"
 local ffi_util 				= require"ffi_util"
@@ -13,9 +17,9 @@ local ffi_add_include_dir 	= ffi_util.ffi_add_include_dir
 local ffi_defs 				= ffi_util.ffi_defs
 local ffi_process_defines 	= ffi_util.ffi_process_defines
 
-ffi_add_include_dir ( rel_dir .. "/include/" )
+ffi_add_include_dir ( rel_dir .. "include" )
 
-ffi_defs ( rel_dir .. "/defs.h" , { --TODO: remove rel_dir
+ffi_defs ( rel_dir .. "defs.h" , { --TODO: remove rel_dir
 		[[libavutil/avstring.h]] ;
 		[[libavcodec/avcodec.h]] ;
 		[[libavformat/avformat.h]] ;
@@ -24,9 +28,9 @@ ffi_defs ( rel_dir .. "/defs.h" , { --TODO: remove rel_dir
 local avutil , avcodec , avformat
 assert ( jit , "jit table unavailable" )
 if jit.os == "Windows" then -- Windows binaries from http://ffmpeg.zeranoe.com/builds/
-	avutil 		= ffi.load ( rel_dir .. [[/avutil-51]] )
-	avcodec 	= ffi.load ( rel_dir .. [[/avcodec-53]] )
-	avformat 	= ffi.load ( rel_dir .. [[/avformat-53]] )
+	avutil 		= ffi.load ( rel_dir .. [[avutil-51]] )
+	avcodec 	= ffi.load ( rel_dir .. [[avcodec-53]] )
+	avformat 	= ffi.load ( rel_dir .. [[avformat-53]] )
 elseif jit.os == "Linux" or jit.os == "OSX" or jit.os == "POSIX" or jit.os == "BSD" then
 	avutil 		= ffi.load ( [[libavutil]] )
 	avcodec 	= ffi.load ( [[libavcodec]] )
