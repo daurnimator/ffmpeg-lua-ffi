@@ -7,8 +7,8 @@ local setmetatable = setmetatable
 local tonumber , tostring = tonumber , tostring
 local tblinsert = table.insert
 
-local ffi = require"ffi"
-local ffi_util = require"ffi_util"
+local ffi 					= require"ffi"
+local ffi_util 				= require"ffi_util"
 local ffi_add_include_dir 	= ffi_util.ffi_add_include_dir
 local ffi_defs 				= ffi_util.ffi_defs
 local ffi_process_defines 	= ffi_util.ffi_process_defines
@@ -22,7 +22,7 @@ ffi_defs ( rel_dir .. "/defs.h" , { --TODO: remove rel_dir
 	} )
 
 local avutil , avcodec , avformat
-assert(jit,"jit table unavailable")
+assert ( jit , "jit table unavailable" )
 if jit.os == "Windows" then -- Windows binaries from http://ffmpeg.zeranoe.com/builds/
 	avutil 		= ffi.load ( rel_dir .. [[/avutil-51]] )
 	avcodec 	= ffi.load ( rel_dir .. [[/avcodec-53]] )
@@ -59,7 +59,7 @@ local function avAssert ( err )
 		if ret ~= -1 then
 			error ( ffi.string ( errbuf ) , 2 )
 		else
-			error ( 'Unknown AV error: ' .. tostring ( ret ) , 2 )
+			error ( "Unknown AV error: " .. tostring ( ret ) , 2 )
 		end
 	end
 	return err
@@ -71,7 +71,7 @@ local formatcontext_mt_openfile = {
 }
 function ffmpeg.openfile ( file )
 	assert ( file , "No input file" )
-	local formatContext = ffi.new ( "AVFormatContext*[1]")
+	local formatContext = ffi.new ( "AVFormatContext*[1]" )
 	avAssert(avformat.avformat_open_input ( formatContext , file , nil , nil ))
 	return setmetatable ( { context = formatContext[0] } , formatcontext_mt_openfile )
 end
@@ -94,7 +94,7 @@ function ffmpeg.findaudiostreams ( formatContext )
 	return audiostreams
 end
 
-local packet = ffi.new("AVPacket")
+local packet = ffi.new ( "AVPacket" )
 function ffmpeg.read_frames ( formatctx )
 	return function ( formatctx , packet )
 			if tonumber( avformat.url_feof ( formatctx.pb ) ) == 0 then
