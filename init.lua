@@ -72,17 +72,20 @@ end
 ffmpeg.avAssert = avAssert
 
 local formatcontext_mt_openfile = {
-	__gc = function ( o ) return avformat.av_close_input_stream ( o.context ) end ;
+	__gc = function ( o ) return avformat.av_close_input_stream ( o ) end ;
 }
+
 function ffmpeg.openfile ( file )
 	assert ( file , "No input file" )
 	local formatContext = ffi.new ( "AVFormatContext*[1]" )
 	avAssert(avformat.avformat_open_input ( formatContext , file , nil , nil ))
-	return setmetatable ( { context = formatContext[0] } , formatcontext_mt_openfile )
+	return formatContext[0]--setmetatable ( { context = formatContext[0] } , formatcontext_mt_openfile )
 end
 
+ffi.metatype ( "AVFormatContext" , formatcontext_mt_openfile )
+
 function ffmpeg.findaudiostreams ( formatContext )
-	formatContext = formatContext.context
+	--formatContext = formatContext.context
 	avAssert( avformat.av_find_stream_info ( formatContext ) )
 
 	local audiostreams = { }
@@ -90,7 +93,7 @@ function ffmpeg.findaudiostreams ( formatContext )
 	for i=0 , nStreams-1 do
 		local ctx = formatContext.streams [ i ].codec
 		if ctx.codec_type == avutil.AVMEDIA_TYPE_AUDIO then
-			local codec = assert ( avcodec.avcodec_find_decoder(ctx.codec_id) , "Unsupported codec" )
+			local codec = assert ( avcodec.avcodec_find_decoder ( ctx.codec_id ) , "Unsupported codec" )
 			avAssert ( avcodec.avcodec_open ( ctx , codec ) )
 			tblinsert ( audiostreams , ctx )
 		end
@@ -108,7 +111,7 @@ function ffmpeg.read_frames ( formatctx )
 			else
 				return nil
 			end
-		end , formatctx.context , packet
+		end , formatctx , packet
 end
 
 avcodec.avcodec_init()
