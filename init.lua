@@ -42,6 +42,8 @@ local ffmpeg = {
 	avutil = avutil ;
 	avcodec = avcodec ;
 	avformat = avformat ;
+
+	AV_TIME_BASE = 1000000 ;
 }
 
 ffmpeg.format_to_type = {
