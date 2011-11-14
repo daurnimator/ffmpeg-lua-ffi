@@ -71,18 +71,13 @@ local function avAssert ( err )
 end
 ffmpeg.avAssert = avAssert
 
-local formatcontext_mt_openfile = {
-	__gc = function ( o ) return avformat.av_close_input_stream ( o ) end ;
-}
-
 function ffmpeg.openfile ( file )
 	assert ( file , "No input file" )
 	local formatContext = ffi.new ( "AVFormatContext*[1]" )
-	avAssert(avformat.avformat_open_input ( formatContext , file , nil , nil ))
-	return formatContext[0]--setmetatable ( { context = formatContext[0] } , formatcontext_mt_openfile )
+	avAssert ( avformat.avformat_open_input ( formatContext , file , nil , nil ) )
+	ffi.gc ( formatContext[0] , avformat.av_close_input_stream )
+	return formatContext[0]
 end
-
-ffi.metatype ( "AVFormatContext" , formatcontext_mt_openfile )
 
 function ffmpeg.findaudiostreams ( formatContext )
 	--formatContext = formatContext.context
