@@ -1,0 +1,3 @@
+[submodule "ffi_util"]
+	path = ffi_util
+	url = git@github.com:daurnimator/lua-ffi-util.git
