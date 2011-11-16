@@ -73,14 +73,13 @@ ffmpeg.avAssert = avAssert
 
 function ffmpeg.openfile ( file )
 	assert ( file , "No input file" )
-	local formatContext = ffi.new ( "AVFormatContext*[1]" )
-	avAssert ( avformat.avformat_open_input ( formatContext , file , nil , nil ) )
-	ffi.gc ( formatContext[0] , avformat.av_close_input_stream )
-	return formatContext[0]
+	local formatContext_p = ffi.new ( "AVFormatContext*[1]" )
+	avAssert ( avformat.avformat_open_input ( formatContext_p , file , nil , nil ) )
+	local formatContext = ffi.gc ( formatContext_p[0] , avformat.av_close_input_stream )
+	return formatContext
 end
 
 function ffmpeg.findaudiostreams ( formatContext )
-	--formatContext = formatContext.context
 	avAssert( avformat.av_find_stream_info ( formatContext ) )
 
 	local audiostreams = { }
