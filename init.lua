@@ -57,9 +57,9 @@ ffmpeg.format_to_type = {
 local function avAssert ( err )
 	if err < 0 then
 		local errbuff = ffi.new ( "uint8_t[256]" )
-		local ret = avutil.av_strerror ( err , errbuf , 256 )
+		local ret = avutil.av_strerror ( err , errbuff , 256 )
 		if ret ~= -1 then
-			error ( ffi.string ( errbuf ) , 2 )
+			error ( ffi.string ( errbuff ) , 2 )
 		else
 			error ( "Unknown AV error: " .. tostring ( ret ) , 2 )
 		end
