@@ -18,7 +18,7 @@ local ffi_process_defines 	= ffi_util.ffi_process_defines
 
 ffi_add_include_dir ( rel_dir .. "include" )
 
-ffi_defs ( rel_dir .. "defs.h" , { --TODO: remove rel_dir
+ffi_defs ( rel_dir .. "ffmpeg_defs.h" , { --TODO: remove rel_dir
 		[[libavutil/avstring.h]] ;
 		[[libavcodec/avcodec.h]] ;
 		[[libavformat/avformat.h]] ;
