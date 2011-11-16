@@ -1,14 +1,11 @@
 -- FFI binding to FFmpeg
 
+local rel_dir = assert ( debug.getinfo ( 1 , "S" ).source:match ( [=[^@(.-[/\]?)[^/\]*$]=] ) , "Current directory unknown" ) .. "./"
+
 local assert , error = assert , error
 local setmetatable = setmetatable
 local tonumber , tostring = tonumber , tostring
 local tblinsert = table.insert
-
-local general 				= require"general"
-local current_script_dir 	= general.current_script_dir
-
-local rel_dir = assert ( current_script_dir ( ) , "Current directory unknown" )
 
 local ffi 					= require"ffi"
 local ffi_util 				= require"ffi_util"
