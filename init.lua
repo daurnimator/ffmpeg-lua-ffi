@@ -7,15 +7,14 @@ local setmetatable = setmetatable
 local tonumber , tostring = tonumber , tostring
 local tblinsert = table.insert
 
-local ffi 					= require"ffi"
-local ffi_util 				= require"ffi_util"
-local ffi_add_include_dir 	= ffi_util.ffi_add_include_dir
-local ffi_defs 				= ffi_util.ffi_defs
-local ffi_process_defines 	= ffi_util.ffi_process_defines
+local ffi                 = require"ffi"
+local ffi_util            = require"ffi_util"
+local ffi_add_include_dir = ffi_util.ffi_add_include_dir
+local ffi_defs            = ffi_util.ffi_defs
 
 ffi_add_include_dir ( rel_dir .. "include" )
 
-ffi_defs ( rel_dir .. "ffmpeg_defs.h" , { --TODO: remove rel_dir
+ffi_defs ( [[ffmpeg_funcs.h]] , [[ffmpeg_defs.h]] , {
 		[[libavutil/avstring.h]] ;
 		[[libavcodec/avcodec.h]] ;
 		[[libavformat/avformat.h]] ;
